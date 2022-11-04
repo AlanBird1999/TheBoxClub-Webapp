@@ -1,0 +1,247 @@
+# this is an auto generated file. This will be overwritten
+subscription OnCreateUser {
+  onCreateUser {
+    id
+    userName
+    Residence {
+      id
+      rName
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    userResidenceId
+  }
+}
+subscription OnUpdateUser {
+  onUpdateUser {
+    id
+    userName
+    Residence {
+      id
+      rName
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    userResidenceId
+  }
+}
+subscription OnDeleteUser {
+  onDeleteUser {
+    id
+    userName
+    Residence {
+      id
+      rName
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+    userResidenceId
+  }
+}
+subscription OnCreateResidence {
+  onCreateResidence {
+    id
+    rName
+    Places {
+      nextToken
+      startedAt
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
+subscription OnUpdateResidence {
+  onUpdateResidence {
+    id
+    rName
+    Places {
+      nextToken
+      startedAt
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
+subscription OnDeleteResidence {
+  onDeleteResidence {
+    id
+    rName
+    Places {
+      nextToken
+      startedAt
+    }
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
+subscription OnCreatePlace {
+  onCreatePlace {
+    id
+    pName
+    Containers {
+      nextToken
+      startedAt
+    }
+    residenceID
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
+subscription OnUpdatePlace {
+  onUpdatePlace {
+    id
+    pName
+    Containers {
+      nextToken
+      startedAt
+    }
+    residenceID
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
+subscription OnDeletePlace {
+  onDeletePlace {
+    id
+    pName
+    Containers {
+      nextToken
+      startedAt
+    }
+    residenceID
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
+subscription OnCreateContainer {
+  onCreateContainer {
+    id
+    cName
+    Items {
+      nextToken
+      startedAt
+    }
+    placeID
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
+subscription OnUpdateContainer {
+  onUpdateContainer {
+    id
+    cName
+    Items {
+      nextToken
+      startedAt
+    }
+    placeID
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
+subscription OnDeleteContainer {
+  onDeleteContainer {
+    id
+    cName
+    Items {
+      nextToken
+      startedAt
+    }
+    placeID
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
+subscription OnCreateItem {
+  onCreateItem {
+    id
+    description
+    iName
+    photo
+    containerID
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
+subscription OnUpdateItem {
+  onUpdateItem {
+    id
+    description
+    iName
+    photo
+    containerID
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
+subscription OnDeleteItem {
+  onDeleteItem {
+    id
+    description
+    iName
+    photo
+    containerID
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
