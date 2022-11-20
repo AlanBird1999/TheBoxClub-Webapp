@@ -15,6 +15,11 @@ export class HomeComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
+    this.getRooms();
+  }
+
+  getRooms(){
+    // get all rooms
   }
 
   open(content: any) {
@@ -36,6 +41,7 @@ export class HomeComponent implements OnInit {
   }
 
   onSubmitNewRoom (f: NgForm) {
+    // add rooms
     console.log(f.value)
     this.modalService.dismissAll(); // dismiss the modal
   }
