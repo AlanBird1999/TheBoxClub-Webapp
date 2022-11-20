@@ -1,0 +1,18 @@
+.seperate {
+    display: flex;
+    justify-content: space-between;
+}
+
+.action-items {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.btn {
+    margin: 5px;
+}
+
+td {
+    text-align: center;
+    vertical-align: middle;
+}
