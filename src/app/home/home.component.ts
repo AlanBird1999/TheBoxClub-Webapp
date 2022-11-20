@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  onSubmit (f: NgForm) {
+  onSubmitNewRoom (f: NgForm) {
     console.log(f.value)
     this.modalService.dismissAll(); // dismiss the modal
   }
