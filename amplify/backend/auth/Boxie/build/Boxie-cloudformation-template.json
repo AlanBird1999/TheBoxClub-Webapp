@@ -171,6 +171,11 @@
             "RequireUppercase": true
           }
         },
+        "UserAttributeUpdateSettings": {
+          "AttributesRequireVerificationBeforeUpdate": [
+            "email"
+          ]
+        },
         "UsernameAttributes": {
           "Ref": "usernameAttributes"
         },

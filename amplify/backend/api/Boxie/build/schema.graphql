@@ -287,22 +287,29 @@ type Mutation {
   deleteItem(input: DeleteItemInput!, condition: ModelItemConditionInput): Item @aws_api_key @aws_iam
 }
 
+input ModelSubscriptionUserFilterInput {
+  id: ModelSubscriptionIDInput
+  userName: ModelSubscriptionStringInput
+  and: [ModelSubscriptionUserFilterInput]
+  or: [ModelSubscriptionUserFilterInput]
+}
+
 type Subscription {
-  onCreateUser: User @aws_subscribe(mutations: ["createUser"]) @aws_api_key @aws_iam
-  onUpdateUser: User @aws_subscribe(mutations: ["updateUser"]) @aws_api_key @aws_iam
-  onDeleteUser: User @aws_subscribe(mutations: ["deleteUser"]) @aws_api_key @aws_iam
-  onCreateResidence: Residence @aws_subscribe(mutations: ["createResidence"]) @aws_api_key @aws_iam
-  onUpdateResidence: Residence @aws_subscribe(mutations: ["updateResidence"]) @aws_api_key @aws_iam
-  onDeleteResidence: Residence @aws_subscribe(mutations: ["deleteResidence"]) @aws_api_key @aws_iam
-  onCreatePlace: Place @aws_subscribe(mutations: ["createPlace"]) @aws_api_key @aws_iam
-  onUpdatePlace: Place @aws_subscribe(mutations: ["updatePlace"]) @aws_api_key @aws_iam
-  onDeletePlace: Place @aws_subscribe(mutations: ["deletePlace"]) @aws_api_key @aws_iam
-  onCreateContainer: Container @aws_subscribe(mutations: ["createContainer"]) @aws_api_key @aws_iam
-  onUpdateContainer: Container @aws_subscribe(mutations: ["updateContainer"]) @aws_api_key @aws_iam
-  onDeleteContainer: Container @aws_subscribe(mutations: ["deleteContainer"]) @aws_api_key @aws_iam
-  onCreateItem: Item @aws_subscribe(mutations: ["createItem"]) @aws_api_key @aws_iam
-  onUpdateItem: Item @aws_subscribe(mutations: ["updateItem"]) @aws_api_key @aws_iam
-  onDeleteItem: Item @aws_subscribe(mutations: ["deleteItem"]) @aws_api_key @aws_iam
+  onCreateUser(filter: ModelSubscriptionUserFilterInput): User @aws_subscribe(mutations: ["createUser"]) @aws_api_key @aws_iam
+  onUpdateUser(filter: ModelSubscriptionUserFilterInput): User @aws_subscribe(mutations: ["updateUser"]) @aws_api_key @aws_iam
+  onDeleteUser(filter: ModelSubscriptionUserFilterInput): User @aws_subscribe(mutations: ["deleteUser"]) @aws_api_key @aws_iam
+  onCreateResidence(filter: ModelSubscriptionResidenceFilterInput): Residence @aws_subscribe(mutations: ["createResidence"]) @aws_api_key @aws_iam
+  onUpdateResidence(filter: ModelSubscriptionResidenceFilterInput): Residence @aws_subscribe(mutations: ["updateResidence"]) @aws_api_key @aws_iam
+  onDeleteResidence(filter: ModelSubscriptionResidenceFilterInput): Residence @aws_subscribe(mutations: ["deleteResidence"]) @aws_api_key @aws_iam
+  onCreatePlace(filter: ModelSubscriptionPlaceFilterInput): Place @aws_subscribe(mutations: ["createPlace"]) @aws_api_key @aws_iam
+  onUpdatePlace(filter: ModelSubscriptionPlaceFilterInput): Place @aws_subscribe(mutations: ["updatePlace"]) @aws_api_key @aws_iam
+  onDeletePlace(filter: ModelSubscriptionPlaceFilterInput): Place @aws_subscribe(mutations: ["deletePlace"]) @aws_api_key @aws_iam
+  onCreateContainer(filter: ModelSubscriptionContainerFilterInput): Container @aws_subscribe(mutations: ["createContainer"]) @aws_api_key @aws_iam
+  onUpdateContainer(filter: ModelSubscriptionContainerFilterInput): Container @aws_subscribe(mutations: ["updateContainer"]) @aws_api_key @aws_iam
+  onDeleteContainer(filter: ModelSubscriptionContainerFilterInput): Container @aws_subscribe(mutations: ["deleteContainer"]) @aws_api_key @aws_iam
+  onCreateItem(filter: ModelSubscriptionItemFilterInput): Item @aws_subscribe(mutations: ["createItem"]) @aws_api_key @aws_iam
+  onUpdateItem(filter: ModelSubscriptionItemFilterInput): Item @aws_subscribe(mutations: ["updateItem"]) @aws_api_key @aws_iam
+  onDeleteItem(filter: ModelSubscriptionItemFilterInput): Item @aws_subscribe(mutations: ["deleteItem"]) @aws_api_key @aws_iam
 }
 
 type ModelResidenceConnection @aws_api_key @aws_iam {
@@ -341,6 +348,13 @@ input UpdateResidenceInput {
 input DeleteResidenceInput {
   id: ID!
   _version: Int
+}
+
+input ModelSubscriptionResidenceFilterInput {
+  id: ModelSubscriptionIDInput
+  rName: ModelSubscriptionStringInput
+  and: [ModelSubscriptionResidenceFilterInput]
+  or: [ModelSubscriptionResidenceFilterInput]
 }
 
 type ModelPlaceConnection @aws_iam @aws_api_key {
@@ -385,6 +399,14 @@ input DeletePlaceInput {
   _version: Int
 }
 
+input ModelSubscriptionPlaceFilterInput {
+  id: ModelSubscriptionIDInput
+  pName: ModelSubscriptionStringInput
+  residenceID: ModelSubscriptionIDInput
+  and: [ModelSubscriptionPlaceFilterInput]
+  or: [ModelSubscriptionPlaceFilterInput]
+}
+
 type ModelContainerConnection @aws_iam @aws_api_key {
   items: [Container]!
   nextToken: String
@@ -425,6 +447,14 @@ input UpdateContainerInput {
 input DeleteContainerInput {
   id: ID!
   _version: Int
+}
+
+input ModelSubscriptionContainerFilterInput {
+  id: ModelSubscriptionIDInput
+  cName: ModelSubscriptionStringInput
+  placeID: ModelSubscriptionIDInput
+  and: [ModelSubscriptionContainerFilterInput]
+  or: [ModelSubscriptionContainerFilterInput]
 }
 
 type ModelItemConnection @aws_iam @aws_api_key {
@@ -475,5 +505,15 @@ input UpdateItemInput {
 input DeleteItemInput {
   id: ID!
   _version: Int
+}
+
+input ModelSubscriptionItemFilterInput {
+  id: ModelSubscriptionIDInput
+  description: ModelSubscriptionStringInput
+  iName: ModelSubscriptionStringInput
+  photo: ModelSubscriptionStringInput
+  containerID: ModelSubscriptionIDInput
+  and: [ModelSubscriptionItemFilterInput]
+  or: [ModelSubscriptionItemFilterInput]
 }
 

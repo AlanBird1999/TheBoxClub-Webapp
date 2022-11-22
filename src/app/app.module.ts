@@ -25,7 +25,9 @@ import { HomeComponent } from './home/home.component';
     AmplifyAuthenticatorModule,
     FormsModule,
     ReactiveFormsModule,
-    NgbModule
+    NgbModule,
+    FormsModule,
+    
 
     
   ],

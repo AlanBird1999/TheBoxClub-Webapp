@@ -50,11 +50,12 @@
         "IdentityPoolName": "testAuthIdentityPool__dev",
         "UserPoolName": "Boxie"
       },
-      "lastPushTimeStamp": "2022-11-04T16:22:30.779Z",
+      "lastPushTimeStamp": "2022-11-22T17:48:02.144Z",
       "providerMetadata": {
         "s3TemplateURL": "https://s3.amazonaws.com/amplify-boxie-dev-132638-deployment/amplify-cfn-templates/auth/Boxie-cloudformation-template.json",
         "logicalId": "authBoxie"
-      }
+      },
+      "lastPushDirHash": "tf/s6gYpF4vHzNw0U0xR+5GWGOU="
     }
   },
   "api": {
@@ -81,11 +82,31 @@
         "GraphQLAPIEndpointOutput": "https://ioyckrnijnagnjq3utvcuc5vai.appsync-api.us-east-1.amazonaws.com/graphql",
         "GraphQLAPIKeyOutput": "da2-x7pqahf4gbfj5b3j743gbixh24"
       },
-      "lastPushTimeStamp": "2022-11-04T16:22:30.784Z",
+      "lastPushTimeStamp": "2022-11-22T17:48:02.149Z",
       "providerMetadata": {
         "s3TemplateURL": "https://s3.amazonaws.com/amplify-boxie-dev-132638-deployment/amplify-cfn-templates/api/cloudformation-template.json",
         "logicalId": "apiBoxie"
       }
+    },
+    "Boxie-staging": {
+      "service": "AppSync",
+      "output": {
+        "authConfig": {
+          "defaultAuthentication": {
+            "authenticationType": "API_KEY"
+          },
+          "additionalAuthenticationProviders": [
+            {
+              "authenticationType": "AWS_IAM"
+            }
+          ]
+        },
+        "GraphQLAPIIdOutput": "rwgszlmjyzadpjkyvrnvctkuye",
+        "GraphQLAPIEndpointOutput": "https://owpf2swat5elzhsdnhx5u7y6wy.appsync-api.us-east-1.amazonaws.com/graphql",
+        "name": "Boxie-staging",
+        "region": "us-east-1"
+      },
+      "lastPushTimeStamp": "2022-11-22T18:24:58.577Z"
     }
   },
   "storage": {
@@ -93,15 +114,16 @@
       "service": "S3",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
+      "lastPushTimeStamp": "2022-11-22T17:48:03.806Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-boxie-dev-132638-deployment/amplify-cfn-templates/storage/cloudformation-template.json",
+        "logicalId": "storageimages"
+      },
       "output": {
         "BucketName": "boxie-image-storage132638-dev",
         "Region": "us-east-1"
       },
-      "lastPushTimeStamp": "2022-11-04T16:22:32.194Z",
-      "providerMetadata": {
-        "s3TemplateURL": "https://s3.amazonaws.com/amplify-boxie-dev-132638-deployment/amplify-cfn-templates/storage/cloudformation-template.json",
-        "logicalId": "storageimages"
-      }
+      "lastPushDirHash": "amG8UMp6P893kwKKUNIue7RUVdw="
     }
   }
 }
