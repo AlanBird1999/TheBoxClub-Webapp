@@ -213,6 +213,7 @@ export class HomeComponent implements OnInit {
     // add rooms
     console.log(f.value.roomname)
     this.saveRoom(this.residenceData, f.value.roomname)
+    //window.location.reload();
     this.modalService.dismissAll(); // dismiss the modal
   }
 
@@ -235,6 +236,6 @@ export class HomeComponent implements OnInit {
     //     style: "cancel",
     //   },
     // ]);
-    location.reload
+    window.location.reload();
   }
 }
