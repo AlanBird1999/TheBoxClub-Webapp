@@ -87,8 +87,13 @@ export class HomeComponent implements OnInit {
     // add logic to check if there is a residency if not create residency
     
     console.log(dataResidence);
+    console.log("residenceData");
+    console.log(this.residenceData);
+    console.log("allObjects");
     console.log(allObjects);
   }
+
+  
 
   async getAllObjects(residenceId: number): Promise<any> {
     const ojbectArray = [];
@@ -206,8 +211,30 @@ export class HomeComponent implements OnInit {
 
   onSubmitNewRoom (f: NgForm) {
     // add rooms
-    console.log(f.value)
+    console.log(f.value.roomname)
+    this.saveRoom(this.residenceData, f.value.roomname)
     this.modalService.dismissAll(); // dismiss the modal
   }
 
+  async saveRoom(
+    residenceProps: any,
+    placeName: string,
+  ) {
+    const placeDetails = {
+      pName: placeName,
+      residenceID: residenceProps.id,
+    };
+    const newResidence: any = await API.graphql({
+      query: mutations.createPlace,
+      variables: { input: placeDetails },
+    });
+  
+    // Alert.alert("Successfully created room", "Room name: " + placeName, [
+    //   {
+    //     text: "OK",
+    //     style: "cancel",
+    //   },
+    // ]);
+    location.reload
+  }
 }
