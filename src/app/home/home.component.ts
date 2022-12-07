@@ -1,37 +1,62 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import {NgForm} from '@angular/forms';
-import {API, Auth} from 'aws-amplify'
+import { NgForm } from '@angular/forms';
+import { API, Auth } from 'aws-amplify';
 import { authFieldsWithDefaults } from '@aws-amplify/ui';
-import * as mutations from "../../graphql/mutations";
+import * as mutations from '../../graphql/mutations';
 
+interface ResidenceData {
+  Places: Place[];
+  id: string;
+  rName: string;
+}
 
+interface Place {
+  containers: Container[];
+  id: string;
+  pName: string;
+}
+
+interface Container {
+  cName: string;
+  id: string;
+  items: any[];
+}
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
-  roomData:any;
-  residenceData: any;
+  roomData: any;
+  residenceData: ResidenceData | undefined;
   loading: any;
   closeResult: string;
-  constructor(
-    private modalService: NgbModal
-    ) {
-      this.closeResult = "";
-     }
+  selectedPlace: Place | undefined;
+  alertText = '';
+  @ViewChild('alert', { read: TemplateRef }) alert:
+    | TemplateRef<any>
+    | undefined;
 
-  ngOnInit(): void {
-    Auth.currentUserInfo().then((userInfo: any)=> {
-      console.log(userInfo);
-      this.getResidence(userInfo);
-    })
-    
+  constructor(private modalService: NgbModal) {
+    this.closeResult = '';
   }
 
-  async getResidence(userInfo: any){
+  ngOnInit(): void {
+    Auth.currentUserInfo().then((userInfo: any) => {
+      console.log(userInfo);
+      this.getResidence(userInfo);
+    });
+  }
+
+  async getResidence(userInfo: any) {
     const dataResidence: any = await API.graphql({
       query: `
       query ListResidences(
@@ -54,46 +79,41 @@ export class HomeComponent implements OnInit {
       }`,
     });
     dataResidence.data.listResidences.items =
-          dataResidence.data.listResidences.items.filter(
-            (r: any) => !r._deleted
-          );
-          if (!dataResidence.data.listResidences.items[0]) {
-            const residenceDetails = {
-              rName: userInfo.username,
-            };
-            const newResidence: any = await API.graphql({
-              query: mutations.createResidence,
-              variables: { input: residenceDetails },
-            });
-  
-            dataResidence.data.listResidences.items[0] =
-              newResidence.data.createResidence;
-            //TODO: right around here if we want the ability to have multiple users to a single residence
-            //this is where we can prompt them to give a residence head
-          }
-          const residence: any = dataResidence.data.listResidences.items[0];
+      dataResidence.data.listResidences.items.filter((r: any) => !r._deleted);
+    if (!dataResidence.data.listResidences.items[0]) {
+      const residenceDetails = {
+        rName: userInfo.username,
+      };
+      const newResidence: any = await API.graphql({
+        query: mutations.createResidence,
+        variables: { input: residenceDetails },
+      });
 
-        const allObjects = await this.getAllObjects(residence.id);
-        this.roomData = allObjects;
-        const populatedDataResidence: any = {
-          Places: allObjects,
-          id: residence.id,
-          rName: residence.rName,
-        };
-        this.residenceData = populatedDataResidence;
-        this.loading = false;
+      dataResidence.data.listResidences.items[0] =
+        newResidence.data.createResidence;
+      //TODO: right around here if we want the ability to have multiple users to a single residence
+      //this is where we can prompt them to give a residence head
+    }
+    const residence: any = dataResidence.data.listResidences.items[0];
 
-          
+    const allObjects = await this.getAllObjects(residence.id);
+    this.roomData = allObjects;
+    const populatedDataResidence: any = {
+      Places: allObjects,
+      id: residence.id,
+      rName: residence.rName,
+    };
+    this.residenceData = populatedDataResidence;
+    this.loading = false;
+
     // add logic to check if there is a residency if not create residency
-    
+
     console.log(dataResidence);
-    console.log("residenceData");
+    console.log('residenceData');
     console.log(this.residenceData);
-    console.log("allObjects");
+    console.log('allObjects');
     console.log(allObjects);
   }
-
-  
 
   async getAllObjects(residenceId: number): Promise<any> {
     const ojbectArray = [];
@@ -142,7 +162,7 @@ export class HomeComponent implements OnInit {
         }`,
       });
       const formattedContainers: any = [];
-  
+
       for (const container of containers.data.listContainers.items) {
         const items: any = await API.graphql({
           query: `query ListItems(
@@ -180,7 +200,7 @@ export class HomeComponent implements OnInit {
           }),
         });
       }
-  
+
       //TODO we are going to need to also populate each container with it's items
       ojbectArray.push({
         pName: place.pName,
@@ -192,13 +212,18 @@ export class HomeComponent implements OnInit {
   }
 
   open(content: any) {
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    });
+    this.modalService
+      .open(content, { ariaLabelledBy: 'modal-basic-title' })
+      .result.then(
+        (result) => {
+          this.closeResult = `Closed with: ${result}`;
+        },
+        (reason) => {
+          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        }
+      );
   }
-  
+
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';
@@ -209,27 +234,77 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  onSubmitNewRoom (f: NgForm) {
+  onSubmitNewRoom(f: NgForm) {
     // add rooms
-    console.log(f.value.roomname)
-    this.saveRoom(this.residenceData, f.value.roomname)
-    //window.location.reload();
-    this.modalService.dismissAll(); // dismiss the modal
+    console.log(f.value.roomname);
+    if (f.value.roomname === '') {
+      this.displayAlert('You must provide a name for your room');
+    } else {
+      this.saveRoom(f.value.roomname);
+      this.modalService.dismissAll();
+    }
   }
 
-  async saveRoom(
-    residenceProps: any,
-    placeName: string,
-  ) {
+  onSubmitNewContainer(f: NgForm) {
+    console.log(f.value);
+    const { containerPlaceSelect, containerName } = f.value;
+    if (containerPlaceSelect === '' || containerName === '') {
+      this.displayAlert(
+        'You must select a room and provide a name for your container.'
+      );
+    } else {
+      const selectedPlace = this.residenceData?.Places.filter(
+        (place) => place.pName === containerPlaceSelect
+      )[0];
+      this.saveContainer(containerName, selectedPlace);
+      this.modalService.dismissAll();
+    }
+  }
+
+  onSubmitNewItem(f: NgForm) {
+    const { itemPlaceSelect, itemContainerSelect, itemName, itemDescription } =
+      f.value;
+    if (
+      itemPlaceSelect === '' ||
+      itemContainerSelect === '' ||
+      itemName === '' ||
+      itemDescription === ''
+    ) {
+      this.displayAlert(
+        'You must select a room with a container and provide a name and description'
+      );
+    } else {
+      //TODO need to implement photo upload
+      const selectedContainer = this.residenceData?.Places.filter(
+        (place) => place.pName === itemPlaceSelect
+      )[0].containers.filter(
+        (container) => container.cName === itemContainerSelect
+      )[0];
+      this.saveItem(selectedContainer, itemDescription, itemName);
+      this.modalService.dismissAll();
+    }
+  }
+
+  onSelectItem(f: NgForm) {
+    console.log(f);
+  }
+
+  setSelectedPlace(event: any) {
+    this.selectedPlace = this.residenceData?.Places.filter(
+      (place) => place.pName === event.srcElement.value
+    )[0];
+  }
+
+  async saveRoom(placeName: string) {
     const placeDetails = {
       pName: placeName,
-      residenceID: residenceProps.id,
+      residenceID: this.residenceData?.id,
     };
     const newResidence: any = await API.graphql({
       query: mutations.createPlace,
       variables: { input: placeDetails },
     });
-  
+
     // Alert.alert("Successfully created room", "Room name: " + placeName, [
     //   {
     //     text: "OK",
@@ -237,5 +312,74 @@ export class HomeComponent implements OnInit {
     //   },
     // ]);
     window.location.reload();
+  }
+
+  async saveContainer(containerName: string, placeProps: Place | undefined) {
+    const containerDetails = {
+      cName: containerName,
+      placeID: placeProps?.id,
+    };
+    await API.graphql({
+      query: `mutation CreateContainer(
+        $input: CreateContainerInput!
+        $condition: ModelContainerConditionInput
+      ) {
+        createContainer(input: $input, condition: $condition) {
+          id
+          placeID
+          Items {
+            nextToken
+            startedAt
+          }
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+      }`,
+      variables: { input: containerDetails },
+    });
+
+    window.location.reload();
+  }
+
+  async saveItem(
+    containerProps: Container | undefined,
+    itemDescription: string,
+    itemName: string
+  ) {
+    const itemDetails = {
+      iName: itemName,
+      description: itemDescription,
+      containerID: containerProps?.id,
+      photo: '', //TODO Blank for now
+    };
+    await API.graphql({
+      query: `mutation CreateItem(
+        $input: CreateItemInput!
+        $condition: ModelItemConditionInput
+      ) {
+        createItem(input: $input, condition: $condition) {
+          id
+          description
+          iName
+          containerID
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+        }
+      }`,
+      variables: { input: itemDetails },
+    });
+
+    window.location.reload();
+  }
+
+  displayAlert(alertText: string) {
+    this.alertText = alertText;
+    this.open(this.alert);
   }
 }
