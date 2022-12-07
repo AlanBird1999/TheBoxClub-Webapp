@@ -1,0 +1,13 @@
+{
+    "AppSyncApiName": "Boxie",
+    "DynamoDBBillingMode": "PAY_PER_REQUEST",
+    "DynamoDBEnableServerSideEncryption": false,
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
+    "S3DeploymentBucket": "amplify-boxie-dev-132638-deployment",
+    "S3DeploymentRootKey": "amplify-appsync-files/4b87cd38782f31179d9ecd37056c1406ca560d12"
+}

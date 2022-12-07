@@ -1,0 +1,519 @@
+
+type User @aws_iam @aws_api_key {
+  id: ID!
+  userName: String
+  Residence: Residence
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+  userResidenceId: ID
+}
+
+type Residence @aws_iam @aws_api_key {
+  id: ID!
+  rName: String
+  Places(filter: ModelPlaceFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelPlaceConnection
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+}
+
+type Place @aws_iam @aws_api_key {
+  id: ID!
+  pName: String
+  Containers(filter: ModelContainerFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelContainerConnection
+  residenceID: ID!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+}
+
+type Container @aws_iam @aws_api_key {
+  id: ID!
+  cName: String
+  Items(filter: ModelItemFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelItemConnection
+  placeID: ID!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+}
+
+type Item @aws_iam @aws_api_key {
+  id: ID!
+  description: String
+  iName: String
+  photo: String
+  containerID: ID!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+  _version: Int!
+  _deleted: Boolean
+  _lastChangedAt: AWSTimestamp!
+}
+
+input ModelStringInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelIntInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelFloatInput {
+  ne: Float
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+  between: [Float]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelBooleanInput {
+  ne: Boolean
+  eq: Boolean
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelIDInput {
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelSubscriptionStringInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+  in: [String]
+  notIn: [String]
+}
+
+input ModelSubscriptionIntInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+  in: [Int]
+  notIn: [Int]
+}
+
+input ModelSubscriptionFloatInput {
+  ne: Float
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+  between: [Float]
+  in: [Float]
+  notIn: [Float]
+}
+
+input ModelSubscriptionBooleanInput {
+  ne: Boolean
+  eq: Boolean
+}
+
+input ModelSubscriptionIDInput {
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
+  in: [ID]
+  notIn: [ID]
+}
+
+enum ModelAttributeTypes {
+  binary
+  binarySet
+  bool
+  list
+  map
+  number
+  numberSet
+  string
+  stringSet
+  _null
+}
+
+input ModelSizeInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+}
+
+enum ModelSortDirection {
+  ASC
+  DESC
+}
+
+type ModelUserConnection @aws_api_key @aws_iam {
+  items: [User]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelUserFilterInput {
+  id: ModelIDInput
+  userName: ModelStringInput
+  and: [ModelUserFilterInput]
+  or: [ModelUserFilterInput]
+  not: ModelUserFilterInput
+  userResidenceId: ModelIDInput
+}
+
+type Query {
+  getUser(id: ID!): User @aws_api_key @aws_iam
+  listUsers(filter: ModelUserFilterInput, limit: Int, nextToken: String): ModelUserConnection @aws_api_key @aws_iam
+  syncUsers(filter: ModelUserFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelUserConnection @aws_api_key @aws_iam
+  getResidence(id: ID!): Residence @aws_api_key @aws_iam
+  listResidences(filter: ModelResidenceFilterInput, limit: Int, nextToken: String): ModelResidenceConnection @aws_api_key @aws_iam
+  syncResidences(filter: ModelResidenceFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelResidenceConnection @aws_api_key @aws_iam
+  getPlace(id: ID!): Place @aws_api_key @aws_iam
+  listPlaces(filter: ModelPlaceFilterInput, limit: Int, nextToken: String): ModelPlaceConnection @aws_api_key @aws_iam
+  syncPlaces(filter: ModelPlaceFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelPlaceConnection @aws_api_key @aws_iam
+  getContainer(id: ID!): Container @aws_api_key @aws_iam
+  listContainers(filter: ModelContainerFilterInput, limit: Int, nextToken: String): ModelContainerConnection @aws_api_key @aws_iam
+  syncContainers(filter: ModelContainerFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelContainerConnection @aws_api_key @aws_iam
+  getItem(id: ID!): Item @aws_api_key @aws_iam
+  listItems(filter: ModelItemFilterInput, limit: Int, nextToken: String): ModelItemConnection @aws_api_key @aws_iam
+  syncItems(filter: ModelItemFilterInput, limit: Int, nextToken: String, lastSync: AWSTimestamp): ModelItemConnection @aws_api_key @aws_iam
+}
+
+input ModelUserConditionInput {
+  userName: ModelStringInput
+  and: [ModelUserConditionInput]
+  or: [ModelUserConditionInput]
+  not: ModelUserConditionInput
+  userResidenceId: ModelIDInput
+}
+
+input CreateUserInput {
+  id: ID
+  userName: String
+  _version: Int
+  userResidenceId: ID
+}
+
+input UpdateUserInput {
+  id: ID!
+  userName: String
+  _version: Int
+  userResidenceId: ID
+}
+
+input DeleteUserInput {
+  id: ID!
+  _version: Int
+}
+
+type Mutation {
+  createUser(input: CreateUserInput!, condition: ModelUserConditionInput): User @aws_api_key @aws_iam
+  updateUser(input: UpdateUserInput!, condition: ModelUserConditionInput): User @aws_api_key @aws_iam
+  deleteUser(input: DeleteUserInput!, condition: ModelUserConditionInput): User @aws_api_key @aws_iam
+  createResidence(input: CreateResidenceInput!, condition: ModelResidenceConditionInput): Residence @aws_api_key @aws_iam
+  updateResidence(input: UpdateResidenceInput!, condition: ModelResidenceConditionInput): Residence @aws_api_key @aws_iam
+  deleteResidence(input: DeleteResidenceInput!, condition: ModelResidenceConditionInput): Residence @aws_api_key @aws_iam
+  createPlace(input: CreatePlaceInput!, condition: ModelPlaceConditionInput): Place @aws_api_key @aws_iam
+  updatePlace(input: UpdatePlaceInput!, condition: ModelPlaceConditionInput): Place @aws_api_key @aws_iam
+  deletePlace(input: DeletePlaceInput!, condition: ModelPlaceConditionInput): Place @aws_api_key @aws_iam
+  createContainer(input: CreateContainerInput!, condition: ModelContainerConditionInput): Container @aws_api_key @aws_iam
+  updateContainer(input: UpdateContainerInput!, condition: ModelContainerConditionInput): Container @aws_api_key @aws_iam
+  deleteContainer(input: DeleteContainerInput!, condition: ModelContainerConditionInput): Container @aws_api_key @aws_iam
+  createItem(input: CreateItemInput!, condition: ModelItemConditionInput): Item @aws_api_key @aws_iam
+  updateItem(input: UpdateItemInput!, condition: ModelItemConditionInput): Item @aws_api_key @aws_iam
+  deleteItem(input: DeleteItemInput!, condition: ModelItemConditionInput): Item @aws_api_key @aws_iam
+}
+
+input ModelSubscriptionUserFilterInput {
+  id: ModelSubscriptionIDInput
+  userName: ModelSubscriptionStringInput
+  and: [ModelSubscriptionUserFilterInput]
+  or: [ModelSubscriptionUserFilterInput]
+}
+
+type Subscription {
+  onCreateUser(filter: ModelSubscriptionUserFilterInput): User @aws_subscribe(mutations: ["createUser"]) @aws_api_key @aws_iam
+  onUpdateUser(filter: ModelSubscriptionUserFilterInput): User @aws_subscribe(mutations: ["updateUser"]) @aws_api_key @aws_iam
+  onDeleteUser(filter: ModelSubscriptionUserFilterInput): User @aws_subscribe(mutations: ["deleteUser"]) @aws_api_key @aws_iam
+  onCreateResidence(filter: ModelSubscriptionResidenceFilterInput): Residence @aws_subscribe(mutations: ["createResidence"]) @aws_api_key @aws_iam
+  onUpdateResidence(filter: ModelSubscriptionResidenceFilterInput): Residence @aws_subscribe(mutations: ["updateResidence"]) @aws_api_key @aws_iam
+  onDeleteResidence(filter: ModelSubscriptionResidenceFilterInput): Residence @aws_subscribe(mutations: ["deleteResidence"]) @aws_api_key @aws_iam
+  onCreatePlace(filter: ModelSubscriptionPlaceFilterInput): Place @aws_subscribe(mutations: ["createPlace"]) @aws_api_key @aws_iam
+  onUpdatePlace(filter: ModelSubscriptionPlaceFilterInput): Place @aws_subscribe(mutations: ["updatePlace"]) @aws_api_key @aws_iam
+  onDeletePlace(filter: ModelSubscriptionPlaceFilterInput): Place @aws_subscribe(mutations: ["deletePlace"]) @aws_api_key @aws_iam
+  onCreateContainer(filter: ModelSubscriptionContainerFilterInput): Container @aws_subscribe(mutations: ["createContainer"]) @aws_api_key @aws_iam
+  onUpdateContainer(filter: ModelSubscriptionContainerFilterInput): Container @aws_subscribe(mutations: ["updateContainer"]) @aws_api_key @aws_iam
+  onDeleteContainer(filter: ModelSubscriptionContainerFilterInput): Container @aws_subscribe(mutations: ["deleteContainer"]) @aws_api_key @aws_iam
+  onCreateItem(filter: ModelSubscriptionItemFilterInput): Item @aws_subscribe(mutations: ["createItem"]) @aws_api_key @aws_iam
+  onUpdateItem(filter: ModelSubscriptionItemFilterInput): Item @aws_subscribe(mutations: ["updateItem"]) @aws_api_key @aws_iam
+  onDeleteItem(filter: ModelSubscriptionItemFilterInput): Item @aws_subscribe(mutations: ["deleteItem"]) @aws_api_key @aws_iam
+}
+
+type ModelResidenceConnection @aws_api_key @aws_iam {
+  items: [Residence]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelResidenceFilterInput {
+  id: ModelIDInput
+  rName: ModelStringInput
+  and: [ModelResidenceFilterInput]
+  or: [ModelResidenceFilterInput]
+  not: ModelResidenceFilterInput
+}
+
+input ModelResidenceConditionInput {
+  rName: ModelStringInput
+  and: [ModelResidenceConditionInput]
+  or: [ModelResidenceConditionInput]
+  not: ModelResidenceConditionInput
+}
+
+input CreateResidenceInput {
+  id: ID
+  rName: String
+  _version: Int
+}
+
+input UpdateResidenceInput {
+  id: ID!
+  rName: String
+  _version: Int
+}
+
+input DeleteResidenceInput {
+  id: ID!
+  _version: Int
+}
+
+input ModelSubscriptionResidenceFilterInput {
+  id: ModelSubscriptionIDInput
+  rName: ModelSubscriptionStringInput
+  and: [ModelSubscriptionResidenceFilterInput]
+  or: [ModelSubscriptionResidenceFilterInput]
+}
+
+type ModelPlaceConnection @aws_iam @aws_api_key {
+  items: [Place]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelPlaceFilterInput {
+  id: ModelIDInput
+  pName: ModelStringInput
+  residenceID: ModelIDInput
+  and: [ModelPlaceFilterInput]
+  or: [ModelPlaceFilterInput]
+  not: ModelPlaceFilterInput
+}
+
+input ModelPlaceConditionInput {
+  pName: ModelStringInput
+  residenceID: ModelIDInput
+  and: [ModelPlaceConditionInput]
+  or: [ModelPlaceConditionInput]
+  not: ModelPlaceConditionInput
+}
+
+input CreatePlaceInput {
+  id: ID
+  pName: String
+  residenceID: ID!
+  _version: Int
+}
+
+input UpdatePlaceInput {
+  id: ID!
+  pName: String
+  residenceID: ID
+  _version: Int
+}
+
+input DeletePlaceInput {
+  id: ID!
+  _version: Int
+}
+
+input ModelSubscriptionPlaceFilterInput {
+  id: ModelSubscriptionIDInput
+  pName: ModelSubscriptionStringInput
+  residenceID: ModelSubscriptionIDInput
+  and: [ModelSubscriptionPlaceFilterInput]
+  or: [ModelSubscriptionPlaceFilterInput]
+}
+
+type ModelContainerConnection @aws_iam @aws_api_key {
+  items: [Container]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelContainerFilterInput {
+  id: ModelIDInput
+  cName: ModelStringInput
+  placeID: ModelIDInput
+  and: [ModelContainerFilterInput]
+  or: [ModelContainerFilterInput]
+  not: ModelContainerFilterInput
+}
+
+input ModelContainerConditionInput {
+  cName: ModelStringInput
+  placeID: ModelIDInput
+  and: [ModelContainerConditionInput]
+  or: [ModelContainerConditionInput]
+  not: ModelContainerConditionInput
+}
+
+input CreateContainerInput {
+  id: ID
+  cName: String
+  placeID: ID!
+  _version: Int
+}
+
+input UpdateContainerInput {
+  id: ID!
+  cName: String
+  placeID: ID
+  _version: Int
+}
+
+input DeleteContainerInput {
+  id: ID!
+  _version: Int
+}
+
+input ModelSubscriptionContainerFilterInput {
+  id: ModelSubscriptionIDInput
+  cName: ModelSubscriptionStringInput
+  placeID: ModelSubscriptionIDInput
+  and: [ModelSubscriptionContainerFilterInput]
+  or: [ModelSubscriptionContainerFilterInput]
+}
+
+type ModelItemConnection @aws_iam @aws_api_key {
+  items: [Item]!
+  nextToken: String
+  startedAt: AWSTimestamp
+}
+
+input ModelItemFilterInput {
+  id: ModelIDInput
+  description: ModelStringInput
+  iName: ModelStringInput
+  photo: ModelStringInput
+  containerID: ModelIDInput
+  and: [ModelItemFilterInput]
+  or: [ModelItemFilterInput]
+  not: ModelItemFilterInput
+}
+
+input ModelItemConditionInput {
+  description: ModelStringInput
+  iName: ModelStringInput
+  photo: ModelStringInput
+  containerID: ModelIDInput
+  and: [ModelItemConditionInput]
+  or: [ModelItemConditionInput]
+  not: ModelItemConditionInput
+}
+
+input CreateItemInput {
+  id: ID
+  description: String
+  iName: String
+  photo: String
+  containerID: ID!
+  _version: Int
+}
+
+input UpdateItemInput {
+  id: ID!
+  description: String
+  iName: String
+  photo: String
+  containerID: ID
+  _version: Int
+}
+
+input DeleteItemInput {
+  id: ID!
+  _version: Int
+}
+
+input ModelSubscriptionItemFilterInput {
+  id: ModelSubscriptionIDInput
+  description: ModelSubscriptionStringInput
+  iName: ModelSubscriptionStringInput
+  photo: ModelSubscriptionStringInput
+  containerID: ModelSubscriptionIDInput
+  and: [ModelSubscriptionItemFilterInput]
+  or: [ModelSubscriptionItemFilterInput]
+}
+

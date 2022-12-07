@@ -1,0 +1,129 @@
+{
+    "providers": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-boxie-dev-132638-authRole",
+            "UnauthRoleArn": "arn:aws:iam::042482157670:role/amplify-boxie-dev-132638-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::042482157670:role/amplify-boxie-dev-132638-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "amplify-boxie-dev-132638-deployment",
+            "UnauthRoleName": "amplify-boxie-dev-132638-unauthRole",
+            "StackName": "amplify-boxie-dev-132638",
+            "StackId": "arn:aws:cloudformation:us-east-1:042482157670:stack/amplify-boxie-dev-132638/7e850de0-b128-11ec-a6b6-127c4ae49d53",
+            "AmplifyAppId": "d3i80onc78hnyj"
+        }
+    },
+    "auth": {
+        "Boxie": {
+            "service": "Cognito",
+            "providerPlugin": "awscloudformation",
+            "dependsOn": [],
+            "customAuth": false,
+            "frontendAuthConfig": {
+                "socialProviders": [],
+                "usernameAttributes": [
+                    "EMAIL"
+                ],
+                "signupAttributes": [],
+                "passwordProtectionSettings": {
+                    "passwordPolicyMinLength": 8,
+                    "passwordPolicyCharacters": [
+                        "REQUIRES_LOWERCASE",
+                        "REQUIRES_NUMBERS",
+                        "REQUIRES_SYMBOLS",
+                        "REQUIRES_UPPERCASE"
+                    ]
+                },
+                "mfaConfiguration": "OFF",
+                "mfaTypes": [
+                    "SMS"
+                ],
+                "verificationMechanisms": [
+                    "EMAIL"
+                ]
+            },
+            "output": {
+                "UserPoolId": "us-east-1_d7ctK3es0",
+                "AppClientIDWeb": "35mabjjip8habgkflkv7joo9a6",
+                "AppClientID": "43fgk3jedn3r1dt7j5359o8dpr",
+                "IdentityPoolId": "us-east-1:7fce9fd6-aed3-4619-9dda-26473672bcd8",
+                "UserPoolArn": "arn:aws:cognito-idp:us-east-1:042482157670:userpool/us-east-1_d7ctK3es0",
+                "IdentityPoolName": "testAuthIdentityPool__dev",
+                "UserPoolName": "Boxie"
+            },
+            "lastPushTimeStamp": "2022-10-26T17:41:40.184Z",
+            "providerMetadata": {
+                "s3TemplateURL": "https://s3.amazonaws.com/amplify-boxie-dev-132638-deployment/amplify-cfn-templates/auth/Boxie-cloudformation-template.json",
+                "logicalId": "authBoxie"
+            },
+            "lastPushDirHash": "tf/s6gYpF4vHzNw0U0xR+5GWGOU="
+        }
+    },
+    "api": {
+        "Boxie": {
+            "service": "AppSync",
+            "providerPlugin": "awscloudformation",
+            "dependsOn": [],
+            "output": {
+                "authConfig": {
+                    "defaultAuthentication": {
+                        "authenticationType": "API_KEY",
+                        "apiKeyConfig": {
+                            "apiKeyExpirationDays": 30,
+                            "description": "api key description"
+                        }
+                    },
+                    "additionalAuthenticationProviders": [
+                        {
+                            "authenticationType": "AWS_IAM"
+                        }
+                    ]
+                },
+                "GraphQLAPIIdOutput": "f4ciwevzpfbljewvnxnotsey5a",
+                "GraphQLAPIEndpointOutput": "https://ioyckrnijnagnjq3utvcuc5vai.appsync-api.us-east-1.amazonaws.com/graphql",
+                "GraphQLAPIKeyOutput": "da2-x7pqahf4gbfj5b3j743gbixh24"
+            },
+            "lastPushTimeStamp": "2022-10-26T17:41:40.187Z",
+            "providerMetadata": {
+                "s3TemplateURL": "https://s3.amazonaws.com/amplify-boxie-dev-132638-deployment/amplify-cfn-templates/api/cloudformation-template.json",
+                "logicalId": "apiBoxie"
+            }
+        },
+        "Boxie-staging": {
+            "service": "AppSync",
+            "output": {
+                "authConfig": {
+                    "defaultAuthentication": {
+                        "authenticationType": "API_KEY"
+                    },
+                    "additionalAuthenticationProviders": [
+                        {
+                            "authenticationType": "AWS_IAM"
+                        }
+                    ]
+                },
+                "GraphQLAPIIdOutput": "rwgszlmjyzadpjkyvrnvctkuye",
+                "GraphQLAPIEndpointOutput": "https://owpf2swat5elzhsdnhx5u7y6wy.appsync-api.us-east-1.amazonaws.com/graphql",
+                "name": "Boxie-staging",
+                "region": "us-east-1"
+            },
+            "lastPushTimeStamp": "2022-11-22T18:24:58.577Z"
+        }
+    },
+    "storage": {
+        "images": {
+            "service": "S3",
+            "providerPlugin": "awscloudformation",
+            "dependsOn": [],
+            "lastPushTimeStamp": "2022-10-26T17:41:40.585Z",
+            "providerMetadata": {
+                "s3TemplateURL": "https://s3.amazonaws.com/amplify-boxie-dev-132638-deployment/amplify-cfn-templates/storage/cloudformation-template.json",
+                "logicalId": "storageimages"
+            },
+            "output": {
+                "BucketName": "boxie-image-storage132638-dev",
+                "Region": "us-east-1"
+            },
+            "lastPushDirHash": "amG8UMp6P893kwKKUNIue7RUVdw="
+        }
+    }
+}
