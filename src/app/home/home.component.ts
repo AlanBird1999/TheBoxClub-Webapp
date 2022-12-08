@@ -6,6 +6,7 @@ import { Storage } from 'aws-amplify';
 import * as mutations from '../../graphql/mutations';
 import { RoomControllService } from '../services/room-controll.service';
 import { Router } from '@angular/router';
+import { Buffer } from 'buffer';
 
 export interface ResidenceData {
   Places: Place[];
@@ -59,7 +60,6 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     Auth.currentUserInfo().then((userInfo: any) => {
-      console.log(userInfo);
       this.getResidence(userInfo);
     });
   }
@@ -114,13 +114,7 @@ export class HomeComponent implements OnInit {
     this.residenceData = populatedDataResidence;
     this.loading = false;
 
-    // add logic to check if there is a residency if not create residency
-
-    console.log(dataResidence);
-    console.log('residenceData');
-    console.log(this.residenceData);
-    console.log('allObjects');
-    console.log(allObjects);
+    // TODO add logic to check if there is a residency if not create residency
   }
 
   async getAllObjects(residenceId: number): Promise<any> {
@@ -244,7 +238,6 @@ export class HomeComponent implements OnInit {
 
   onSubmitNewRoom(f: NgForm) {
     // add rooms
-    console.log(f.value.roomname);
     if (f.value.roomname === '') {
       this.displayAlert('You must provide a name for your room');
     } else {
@@ -254,7 +247,6 @@ export class HomeComponent implements OnInit {
   }
 
   onSubmitNewContainer(f: NgForm) {
-    console.log(f.value);
     const { containerPlaceSelect, containerName } = f.value;
     if (containerPlaceSelect === '' || containerName === '') {
       this.displayAlert(
@@ -296,10 +288,6 @@ export class HomeComponent implements OnInit {
       );
       this.modalService.dismissAll();
     }
-  }
-
-  onSelectItem(f: NgForm) {
-    console.log(f);
   }
 
   setSelectedPlace(event: any) {
@@ -372,12 +360,10 @@ export class HomeComponent implements OnInit {
     itemName: string,
     imageUri: any
   ) {
-    console.log(imageUri);
     const uploadResult = await this.pathToImageFile(itemName, imageUri);
 
     let url = '';
     if (uploadResult) {
-      console.log('upload result', uploadResult);
       url = uploadResult.key;
     }
 
@@ -417,12 +403,14 @@ export class HomeComponent implements OnInit {
       )[0].containers.filter((container) => container.cName === cName)[0]
     );
     this.router.navigate(['room-view']);
-    console.log(pName, cName);
   }
 
   async pathToImageFile(iName: string, imageUri: any) {
     try {
-      return await Storage.put(iName, imageUri, {
+      let photoKey = Buffer.from(iName + Date.now(), 'binary').toString(
+        'base64'
+      );
+      return await Storage.put(photoKey, imageUri, {
         contentType: 'image/jpeg',
         expires: new Date('2023-1-1'),
       });
