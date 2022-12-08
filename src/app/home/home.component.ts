@@ -1,32 +1,35 @@
-import {
-  Component,
-  Input,
-  OnInit,
-  TemplateRef,
-  ViewChild,
-} from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgForm } from '@angular/forms';
 import { API, Auth } from 'aws-amplify';
-import { authFieldsWithDefaults } from '@aws-amplify/ui';
+import { Storage } from 'aws-amplify';
 import * as mutations from '../../graphql/mutations';
+import { RoomControllService } from '../services/room-controll.service';
+import { Router } from '@angular/router';
 
-interface ResidenceData {
+export interface ResidenceData {
   Places: Place[];
   id: string;
   rName: string;
 }
 
-interface Place {
+export interface Place {
   containers: Container[];
   id: string;
   pName: string;
 }
 
-interface Container {
+export interface Container {
   cName: string;
   id: string;
-  items: any[];
+  items: Item[];
+}
+
+export interface Item {
+  description: string;
+  iName: string;
+  id: string;
+  photo: string;
 }
 
 @Component({
@@ -37,15 +40,20 @@ interface Container {
 export class HomeComponent implements OnInit {
   roomData: any;
   residenceData: ResidenceData | undefined;
-  loading: any;
+  loading = true;
   closeResult: string;
   selectedPlace: Place | undefined;
   alertText = '';
+  selectedFile: any;
   @ViewChild('alert', { read: TemplateRef }) alert:
     | TemplateRef<any>
     | undefined;
 
-  constructor(private modalService: NgbModal) {
+  constructor(
+    private modalService: NgbModal,
+    private readonly roomControllerService: RoomControllService,
+    private readonly router: Router
+  ) {
     this.closeResult = '';
   }
 
@@ -280,7 +288,12 @@ export class HomeComponent implements OnInit {
       )[0].containers.filter(
         (container) => container.cName === itemContainerSelect
       )[0];
-      this.saveItem(selectedContainer, itemDescription, itemName);
+      this.saveItem(
+        selectedContainer,
+        itemDescription,
+        itemName,
+        this.selectedFile
+      );
       this.modalService.dismissAll();
     }
   }
@@ -344,16 +357,35 @@ export class HomeComponent implements OnInit {
     window.location.reload();
   }
 
+  imageSelected(event: any) {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length) {
+      return;
+    }
+    console.log('input files', input.files);
+    this.selectedFile = input.files[0];
+  }
+
   async saveItem(
     containerProps: Container | undefined,
     itemDescription: string,
-    itemName: string
+    itemName: string,
+    imageUri: any
   ) {
+    console.log(imageUri);
+    const uploadResult = await this.pathToImageFile(itemName, imageUri);
+
+    let url = '';
+    if (uploadResult) {
+      console.log('upload result', uploadResult);
+      url = uploadResult.key;
+    }
+
     const itemDetails = {
       iName: itemName,
       description: itemDescription,
       containerID: containerProps?.id,
-      photo: '', //TODO Blank for now
+      photo: url,
     };
     await API.graphql({
       query: `mutation CreateItem(
@@ -375,7 +407,29 @@ export class HomeComponent implements OnInit {
       variables: { input: itemDetails },
     });
 
-    window.location.reload();
+    // window.location.reload();
+  }
+
+  openContainer(pName: string, cName: string) {
+    this.roomControllerService.setCurrentContainer(
+      this.residenceData?.Places.filter(
+        (place) => place.pName === pName
+      )[0].containers.filter((container) => container.cName === cName)[0]
+    );
+    this.router.navigate(['room-view']);
+    console.log(pName, cName);
+  }
+
+  async pathToImageFile(iName: string, imageUri: any) {
+    try {
+      return await Storage.put(iName, imageUri, {
+        contentType: 'image/jpeg',
+        expires: new Date('2023-1-1'),
+      });
+    } catch (err) {
+      console.log('Error uploading file:', err);
+      return null;
+    }
   }
 
   displayAlert(alertText: string) {

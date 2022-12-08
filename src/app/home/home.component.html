@@ -5,8 +5,12 @@
       <i class="fa fa-plus"></i>
     </button>
   </div>
-  <div *ngFor="let item of roomData">
-    <h5>{{ item.pName }}</h5>
+  <div *ngIf="loading">
+    <img src="assets/box-load-gif.gif" /><br />
+    Loading ...
+  </div>
+  <div *ngFor="let place of roomData">
+    <h5>{{ place.pName }}</h5>
     <table class="table table-bordered table-striped">
       <thead>
         <tr>
@@ -16,49 +20,23 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Box1</td>
-          <td>5</td>
+        <tr *ngFor="let container of place.containers">
+          <td>{{ container.cName }}</td>
+          <td>{{ container.items.length }}</td>
           <td class="action-items">
-            <button type="button" class="btn btn-outline-info">
-              <i class="fa fa-search"></i>Details
+            <button
+              type="button"
+              class="btn btn-outline-info"
+              (click)="openContainer(place.pName, container.cName)"
+            >
+              <i class="fa fa-search"></i>View Items
             </button>
-            <button class="btn btn-outline-warning">
+            <!-- <button class="btn btn-outline-warning">
               <i class="fa fa-edit"></i>Edit
             </button>
             <button class="btn btn-outline-danger">
               <i class="fa fa-remove"></i>Delete
-            </button>
-          </td>
-        </tr>
-        <tr>
-          <td>Box2</td>
-          <td>17</td>
-          <td class="action-items">
-            <button type="button" class="btn btn-outline-info">
-              <i class="fa fa-search"></i>Details
-            </button>
-            <button class="btn btn-outline-warning">
-              <i class="fa fa-edit"></i>Edit
-            </button>
-            <button class="btn btn-outline-danger">
-              <i class="fa fa-remove"></i>Delete
-            </button>
-          </td>
-        </tr>
-        <tr>
-          <td>Box3</td>
-          <td>0</td>
-          <td class="action-items">
-            <button type="button" class="btn btn-outline-info">
-              <i class="fa fa-search"></i>Details
-            </button>
-            <button class="btn btn-outline-warning">
-              <i class="fa fa-edit"></i>Edit
-            </button>
-            <button class="btn btn-outline-danger">
-              <i class="fa fa-remove"></i>Delete
-            </button>
+            </button> -->
           </td>
         </tr>
       </tbody>
@@ -249,7 +227,13 @@
               ngModel
             />
           </div>
-          <!-- TODO upload image here  -->
+          <input
+            type="file"
+            id="imageUpload"
+            name="imageUpload"
+            accept="image/png, image/jpeg"
+            (change)="imageSelected($event)"
+          />
         </div>
         <input type="submit" value="Add Item" class="btn btn-outline-dark" />
       </form>
