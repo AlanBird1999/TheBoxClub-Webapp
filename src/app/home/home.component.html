@@ -1,85 +1,269 @@
 <div class="container">
-    <div class="seperate">
-            <h1>Rooms</h1>
-            <button class="btn btn-md btn-outline-primary" (click)="open(newRoom)">
-                <i class="fa fa-plus"></i>New Room</button>
-    </div>
-    <div *ngFor="let item of roomData">
-      <h5>{{item.pName}}</h5>
-      <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <td>Container Name</td>
-                <td>Number of Items</td>
-                <td>Actions</td>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Box1</td>
-                <td>5</td>
-                <td class="action-items">
-                    <button type="button" class="btn btn-outline-info">
-                      <i class="fa fa-search"></i>Details</button>
-                    <button class="btn btn-outline-warning">
-                      <i class="fa fa-edit"></i>Edit</button>
-                    <button class="btn btn-outline-danger">
-                      <i class="fa fa-remove"></i>Delete</button>
-                  </td>
-            </tr>
-            <tr>
-                <td>Box2</td>
-                <td>17</td>
-                <td class="action-items">
-                    <button type="button" class="btn btn-outline-info">
-                      <i class="fa fa-search"></i>Details</button>
-                    <button class="btn btn-outline-warning">
-                      <i class="fa fa-edit"></i>Edit</button>
-                    <button class="btn btn-outline-danger">
-                      <i class="fa fa-remove"></i>Delete</button>
-                  </td>
-            </tr>
-            <tr>
-                <td>Box3</td>
-                <td>0</td>
-                <td class="action-items">
-                    <button type="button" class="btn btn-outline-info">
-                      <i class="fa fa-search"></i>Details</button>
-                    <button class="btn btn-outline-warning">
-                      <i class="fa fa-edit"></i>Edit</button>
-                    <button class="btn btn-outline-danger">
-                      <i class="fa fa-remove"></i>Delete</button>
-                  </td>
-            </tr>
-        </tbody>
+  <div class="seperate">
+    <h1>Rooms</h1>
+    <button class="btn btn-md btn-outline-primary" (click)="open(selectItem)">
+      <i class="fa fa-plus"></i>
+    </button>
+  </div>
+  <div *ngIf="loading">
+    <img src="assets/box-load-gif.gif" /><br />
+    Loading ...
+  </div>
+  <div *ngFor="let place of roomData">
+    <h5>{{ place.pName }}</h5>
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <td>Container Name</td>
+          <td>Number of Items</td>
+          <td>Actions</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let container of place.containers">
+          <td>{{ container.cName }}</td>
+          <td>{{ container.items.length }}</td>
+          <td class="action-items">
+            <button
+              type="button"
+              class="btn btn-outline-info"
+              (click)="openContainer(place.pName, container.cName)"
+            >
+              <i class="fa fa-search"></i>View Items
+            </button>
+            <!-- <button class="btn btn-outline-warning">
+              <i class="fa fa-edit"></i>Edit
+            </button>
+            <button class="btn btn-outline-danger">
+              <i class="fa fa-remove"></i>Delete
+            </button> -->
+          </td>
+        </tr>
+      </tbody>
     </table>
-    </div>
-    
-
-    <!-- modal for new room -->
-    <ng-template #newRoom let-modal>
-        <div class="modal-header">
-          <h4 class="modal-title" id="modal-basic-title">New Room</h4>
-          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form #f="ngForm" (ngSubmit)="onSubmitNewRoom(f)" novalidate>
-            <div class="form-group">
-              <label for="roomname">Room Name</label>
-              <div class="input-group">
-                <input id="roomname" name="roomname" class="form-control" ngModel >
-              </div>
-            </div>
-            <input type="submit" value="Add Room" class="btn btn-outline-dark">
-          </form>
-        </div>
-        <!-- <div class="modal-footer">
-          <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
-        </div> -->
-      </ng-template>
-
   </div>
 
-  
+  <!-- modal for select item type -->
+  <ng-template #selectItem let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">
+        What would you like to add?
+      </h4>
+      <button
+        type="button"
+        class="close"
+        aria-label="Close"
+        (click)="modal.dismiss('Cross click')"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <button
+        (click)="open(newRoom); modal.dismiss('Room Create')"
+        class="btn btn-outline-dark"
+      >
+        Room
+      </button>
+      <button
+        (click)="open(newContainer); modal.dismiss('Container Create')"
+        class="btn btn-outline-dark"
+      >
+        Container
+      </button>
+      <button
+        (click)="open(newItem); modal.dismiss('Item Create')"
+        class="btn btn-outline-dark"
+      >
+        Item
+      </button>
+    </div>
+    <!-- <div class="modal-footer">
+          <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+        </div> -->
+  </ng-template>
+
+  <!-- modal for new room -->
+  <ng-template #newRoom let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">New Room</h4>
+      <button
+        type="button"
+        class="close"
+        aria-label="Close"
+        (click)="modal.dismiss('Cross click')"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form #f="ngForm" (ngSubmit)="onSubmitNewRoom(f)" novalidate>
+        <div class="form-group">
+          <label for="roomname">Room Name</label>
+          <div class="input-group">
+            <input id="roomname" name="roomname" class="form-control" ngModel />
+          </div>
+        </div>
+        <input type="submit" value="Add Room" class="btn btn-outline-dark" />
+      </form>
+    </div>
+    <!-- <div class="modal-footer">
+          <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+        </div> -->
+  </ng-template>
+
+  <!-- modal for new container -->
+  <ng-template #newContainer let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">New Container</h4>
+      <button
+        type="button"
+        class="close"
+        aria-label="Close"
+        (click)="modal.dismiss('Cross click')"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form #f="ngForm" (ngSubmit)="onSubmitNewContainer(f)" novalidate>
+        <label for="container-place-select">Room</label>
+        <select
+          name="containerPlaceSelect"
+          id="container-place-select"
+          class="form-control"
+          ngModel
+        >
+          <option
+            *ngFor="let place of residenceData?.Places"
+            [value]="place.pName"
+          >
+            {{ place.pName }}
+          </option>
+        </select>
+        <div class="form-group">
+          <label for="place-name">Container Name</label>
+          <div class="input-group">
+            <input
+              id="container-name"
+              name="containerName"
+              class="form-control"
+              ngModel
+            />
+          </div>
+        </div>
+        <input
+          type="submit"
+          value="Add Container"
+          class="btn btn-outline-dark"
+        />
+      </form>
+    </div>
+    <!-- <div class="modal-footer">
+          <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+        </div> -->
+  </ng-template>
+
+  <!-- modal for new item -->
+  <ng-template #newItem let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">New Item</h4>
+      <button
+        type="button"
+        class="close"
+        aria-label="Close"
+        (click)="modal.dismiss('Cross click')"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form #f="ngForm" (ngSubmit)="onSubmitNewItem(f)" novalidate>
+        <label for="container-place-select">Room</label>
+        <select
+          name="itemPlaceSelect"
+          id="item-place-select"
+          class="form-control"
+          (change)="setSelectedPlace($event)"
+          ngModel
+        >
+          <option
+            *ngFor="let place of residenceData?.Places"
+            [value]="place.pName"
+          >
+            {{ place.pName }}
+          </option>
+        </select>
+        <label for="item-container-select">Container</label>
+        <select
+          name="itemContainerSelect"
+          id="item-container-select"
+          class="form-control"
+          ngModel
+        >
+          <option
+            *ngFor="let container of selectedPlace?.containers"
+            [value]="container.cName"
+          >
+            {{ container.cName }}
+          </option>
+        </select>
+        <div class="form-group">
+          <label for="item-name">Item name</label>
+          <div class="input-group">
+            <input
+              id="item-name"
+              name="itemName"
+              class="form-control"
+              ngModel
+            />
+          </div>
+          <label for="item-description">Item description</label>
+          <div class="input-group">
+            <input
+              id="item-description"
+              name="itemDescription"
+              class="form-control"
+              ngModel
+            />
+          </div>
+          <input
+            type="file"
+            id="imageUpload"
+            name="imageUpload"
+            accept="image/png, image/jpeg"
+            (change)="imageSelected($event)"
+          />
+        </div>
+        <input type="submit" value="Add Item" class="btn btn-outline-dark" />
+      </form>
+    </div>
+    <!-- <div class="modal-footer">
+          <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+        </div> -->
+  </ng-template>
+
+  <!-- Alert modal -->
+  <ng-template #alert let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="alert-title">Alert</h4>
+      <button
+        type="button"
+        class="close"
+        aria-label="Close"
+        (click)="modal.dismiss('Cross click')"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      {{ alertText }}
+      <button
+        class="btn btn-outline-dark"
+        (click)="modal.dismiss('Cross click')"
+      >
+        Ok
+      </button>
+    </div>
+  </ng-template>
+</div>
