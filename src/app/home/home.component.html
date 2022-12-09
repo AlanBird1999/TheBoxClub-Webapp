@@ -4,6 +4,9 @@
     <button class="btn btn-md btn-outline-primary" (click)="open(selectItem)">
       <i class="fa fa-plus"></i>
     </button>
+    <button class="btn btn-md btn-outline-primary" (click)="printQRCodes()">
+      Print QR Codes
+    </button>
   </div>
   <div *ngIf="loading">
     <img src="assets/box-load-gif.gif" /><br />
@@ -266,4 +269,6 @@
       </button>
     </div>
   </ng-template>
+
+  
 </div>
