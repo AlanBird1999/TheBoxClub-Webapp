@@ -12,6 +12,7 @@ import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HomeComponent } from './home/home.component';
 import { RoomViewComponent } from './room-view/room-view.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,7 @@ import { RoomViewComponent } from './room-view/room-view.component';
     ReactiveFormsModule,
     NgbModule,
     FormsModule,
-    
+    HttpClientModule,
 
     
   ],
