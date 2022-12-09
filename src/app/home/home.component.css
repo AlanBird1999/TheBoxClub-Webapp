@@ -16,3 +16,7 @@ td {
     text-align: center;
     vertical-align: middle;
 }
+
+.no-text {
+    margin-right: 0px;
+}
