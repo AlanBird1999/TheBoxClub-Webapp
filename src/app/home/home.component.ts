@@ -7,6 +7,7 @@ import * as mutations from '../../graphql/mutations';
 import { RoomControllService } from '../services/room-controll.service';
 import { Router } from '@angular/router';
 import { Buffer } from 'buffer';
+import { QrCodesService } from '../services/qr-codes.service';
 
 export interface ResidenceData {
   Places: Place[];
@@ -53,7 +54,8 @@ export class HomeComponent implements OnInit {
   constructor(
     private modalService: NgbModal,
     private readonly roomControllerService: RoomControllService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly qrCodesService: QrCodesService
   ) {
     this.closeResult = '';
   }
@@ -274,7 +276,6 @@ export class HomeComponent implements OnInit {
         'You must select a room with a container and provide a name and description'
       );
     } else {
-      //TODO need to implement photo upload
       const selectedContainer = this.residenceData?.Places.filter(
         (place) => place.pName === itemPlaceSelect
       )[0].containers.filter(
@@ -393,7 +394,7 @@ export class HomeComponent implements OnInit {
       variables: { input: itemDetails },
     });
 
-    // window.location.reload();
+    window.location.reload();
   }
 
   openContainer(pName: string, cName: string) {
@@ -423,5 +424,34 @@ export class HomeComponent implements OnInit {
   displayAlert(alertText: string) {
     this.alertText = alertText;
     this.open(this.alert);
+  }
+
+  printQRCodes() {
+    try {
+      this.displayAlert('Downloading QR codes now.');
+      this.qrCodesService.printQRCodes(
+        this.residenceData?.Places.map((place: any) => {
+          return place.containers.map((container: any) => {
+            return {
+              pName: place.pName,
+              ...container,
+            };
+          });
+        }).flat(1)
+      );
+    } catch (err) {
+      console.log('Error printing QR codes:', err);
+      this.displayAlert('Error printing QR codes');
+    }
+  }
+
+  printInsuranceDocument() {
+    try {
+      this.displayAlert('Downloading insurance document now.');
+      this.qrCodesService.printInsuranceForm(this.residenceData);
+    } catch (err) {
+      console.log('Error printing QR codes:', err);
+      this.displayAlert('Error printing QR codes');
+    }
   }
 }
