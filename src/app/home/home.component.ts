@@ -9,7 +9,6 @@ import { Router } from '@angular/router';
 import { Buffer } from 'buffer';
 import { QrCodesService } from '../services/qr-codes.service';
 
-
 export interface ResidenceData {
   Places: Place[];
   id: string;
@@ -277,7 +276,6 @@ export class HomeComponent implements OnInit {
         'You must select a room with a container and provide a name and description'
       );
     } else {
-      //TODO need to implement photo upload
       const selectedContainer = this.residenceData?.Places.filter(
         (place) => place.pName === itemPlaceSelect
       )[0].containers.filter(
@@ -396,7 +394,7 @@ export class HomeComponent implements OnInit {
       variables: { input: itemDetails },
     });
 
-    // window.location.reload();
+    window.location.reload();
   }
 
   openContainer(pName: string, cName: string) {
@@ -428,21 +426,32 @@ export class HomeComponent implements OnInit {
     this.open(this.alert);
   }
 
-
   printQRCodes() {
     try {
-      this.qrCodesService.printQRCodes(this.residenceData?.Places.map((place: any) => {
-        return place.containers.map((container: any) => {
-          return {
-            pName: place.pName,
-            ...container,
-          };
-        });
-      }).flat(1), this.displayAlert);
+      this.displayAlert('Downloading QR codes now.');
+      this.qrCodesService.printQRCodes(
+        this.residenceData?.Places.map((place: any) => {
+          return place.containers.map((container: any) => {
+            return {
+              pName: place.pName,
+              ...container,
+            };
+          });
+        }).flat(1)
+      );
     } catch (err) {
       console.log('Error printing QR codes:', err);
       this.displayAlert('Error printing QR codes');
     }
-    
+  }
+
+  printInsuranceDocument() {
+    try {
+      this.displayAlert('Downloading insurance document now.');
+      this.qrCodesService.printInsuranceForm(this.residenceData);
+    } catch (err) {
+      console.log('Error printing QR codes:', err);
+      this.displayAlert('Error printing QR codes');
+    }
   }
 }
